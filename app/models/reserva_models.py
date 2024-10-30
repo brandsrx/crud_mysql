@@ -35,7 +35,7 @@ class Reserva():
             cursor.close()
             return reservas
       
-      def update_reserva(id_reserva, nueva_fecha_inicio, nueva_fecha_fin):
+      def update_reserva(id_reserva, nueva_fecha_inicio, nueva_fecha_fin, contrato_nuevo):
             """Actualiza un registro en la tabla reserva."""
             connection = db()
             if connection:
@@ -43,9 +43,16 @@ class Reserva():
                         with connection.cursor() as cursor:
                               cursor.execute(
                                     """UPDATE reserva 
-                                    SET fecha_inicio = :1, fecha_fin = :2 
-                                    WHERE idreserva = :3""",
-                                    (nueva_fecha_inicio, nueva_fecha_fin, id_reserva)
+                                    SET fechaInicio = :nueva_fecha_inicio, 
+                                          fechaFin = :nueva_fecha_fin, 
+                                          contrato = :contrato_nuevo
+                                    WHERE idreserva = :id_reserva""",
+                                    {
+                                          'nueva_fecha_inicio': nueva_fecha_inicio,
+                                          'nueva_fecha_fin': nueva_fecha_fin,
+                                          'contrato_nuevo': contrato_nuevo,
+                                          'id_reserva': id_reserva
+                                    }
                               )
                               connection.commit()
                         print("Reserva actualizada exitosamente")
@@ -53,6 +60,7 @@ class Reserva():
                         print("Error al actualizar la reserva:", ex)
                   finally:
                         connection.close()
+
       def delete_reserva(id_reserva):
             connection = db()
             try:

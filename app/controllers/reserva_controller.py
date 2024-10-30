@@ -38,6 +38,26 @@ def reserva(id):
             return "NO hay una reserva con ese id"
       return reserva_view.reserva(reserva=reserva)
 
+@reserva_bp.route('/update/<int:id>',methods=["GET","POST"])
+def update(id):
+      if( request.method == "GET"):
+            reserva = Reserva.find_by(id)
+            if reserva is None:
+                  return "NO hay una reserva con ese id"
+            return reserva_view.update_reserva(reserva=reserva)
+      
+      fecha_inicio = request.form['fecha_inicio']
+      fecha_fin = request.form['fecha_fin']
+      contrato = request.form['contrato']
+      fecha_inicio_str = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+      fecha_fin_str = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+      
+      
+
+      Reserva.update_reserva(id_reserva=id,nueva_fecha_inicio=fecha_inicio_str,nueva_fecha_fin=fecha_fin_str,contrato_nuevo=contrato)
+
+      return "se actualizo"
+
 @reserva_bp.route('/delete/<int:id>')
 def delete_reserva(id):
       Reserva.delete_reserva(id)

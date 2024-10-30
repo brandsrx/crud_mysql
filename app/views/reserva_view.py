@@ -9,6 +9,8 @@ def reservas(reservas):
 def reserva(reserva):
       return render_template('reserva.html',reserva=reserva)
 
+def update_reserva(reserva):
+      return render_template('update_reserva.html',reserva=reserva)
 
 def delete():
       return "SE elimino correctamente"

@@ -1,9 +1,10 @@
-from flask import Flask
-from controllers import reserva_controller
+from flask import Flask,flash
+from controllers import vehiculo_controller
 
 app = Flask(__name__)
 
-app.register_blueprint(reserva_controller.reserva_bp)
+app.secret_key="mi_clave_secreta"
+app.register_blueprint(vehiculo_controller.vehiculo_bp)
 
 
 if __name__ == "__main__":

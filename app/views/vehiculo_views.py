@@ -11,3 +11,7 @@ def vehiculos(vehiculos):
 
 def edit(vehiculo):
       return render_template('edit_vehiculo.html',vehiculo=vehiculo)
+
+      
+def seguimient(seg):
+      return render_template('seguimiento.html',segs=seg)

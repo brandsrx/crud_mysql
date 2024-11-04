@@ -1,10 +1,11 @@
 from flask import Blueprint,request,url_for,redirect,flash
 from views import vehiculo_views
 from models.vehiculo_models import Vehiculo
-
+from config import prepair_list,index_dat
 vehiculo_bp = Blueprint('vehiculo',__name__)
 
-@vehiculo_bp.route('/')
+
+@vehiculo_bp.route('/vehiculos')
 def get_vehiculos():
       vehiculos = Vehiculo.find_all()
       return vehiculo_views.vehiculos(vehiculos=vehiculos)
@@ -61,3 +62,46 @@ def delete(id):
       vehiculo = Vehiculo.delete(id_vehiculo=id)
       flash(f'Se elimino el vehiculo correctamente: {id}','error')
       return redirect(url_for('vehiculo.get_vehiculos'))
+
+#------------- buscar
+def perfom_search(index,query):
+      query = query.lower().strip()
+      results = set()
+
+      if query in index:
+            results.update(index[query])
+      else:
+            query_words = query.split()
+            for word in query_words:
+                  if word in index:
+                        results.update(index[word])
+      return list(results)
+
+#metodos de casos de uso
+@vehiculo_bp.route("/vehiculo/results",methods=["GET"])
+def buscar_vehiculo():
+      list_data = prepair_list()
+      index_end = index_dat(list_data)
+      query = request.args.get('query')
+      list_results = perfom_search(index=index_end,query=query)
+      results = []
+      for key in list_results:
+            vehiculo =  Vehiculo.find_by(key)
+            results.append({
+            "id_vehiculo":vehiculo.id_vehiculo,
+            "id_estado_vehiculo":vehiculo.id_estado_vehiculo,
+            "id_marca":vehiculo.id_marca,
+            "año":vehiculo.anio,
+            "modelo":vehiculo.modelo,
+            "precio_diario":vehiculo.precio_diario,
+            "precio_dolar":vehiculo.precio_dolar,
+            "caracteristicas":vehiculo.caracteristicas
+            })
+      return vehiculo_views.vehiculos(vehiculos=results)
+
+
+# seguimiento vehiculo
+@vehiculo_bp.route("/vehiculos/seguimiento")
+def seguimiento_vehiculo():
+      segui = Vehiculo.seguimient()
+      return vehiculo_views.seguimient(seg=segui)

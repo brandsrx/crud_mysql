@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex items-center gap-4 bg-gray-900 p-4">
+    
+
+    <!-- Botón para Registrar Vehículo -->
+    <nav class="flex space-x-4">
+        <!-- Botón de "Registrar vehículo" -->
+        <a href="#registrar-tipo-cambio" 
+           class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 transition duration-200 ease-in-out shadow-lg">
+            Registrar Tipo de cambio
+        </a>
+        <a href="#registrar-ingresos" 
+           class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 transition duration-200 ease-in-out shadow-lg">
+            Registrar ingresos
+        </a>
+        <a href="#historial-transacciones" 
+        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 transition duration-200 ease-in-out shadow-lg">
+         Historial de Transacciones
+     </a>
+        <!-- Botón de "Consultar disponibilidad" -->
+        <a href="{{url_for('ingresos.dashboard')}}" 
+           class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-full text-sm px-5 py-2.5 transition duration-200 ease-in-out shadow-lg">
+            Dashboard
+        </a>
+    </nav>
+    
+</div>
+
+<div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold mb-6">Gestión de Ingresos</h1>
+
+    <!-- Formulario de Tipo de Cambio -->
+    <div class="mb-8">
+        <h2 id="registrar-tipo-cambio" class="text-xl font-semibold mb-4">Registrar Tipo de Cambio</h2>
+        <form action="/tipo-cambio" method="POST" class="space-y-4">
+            <div>
+                <label for="fechaTipoCambio" class="block text-sm font-medium text-gray-700">Fecha Tipo de Cambio</label>
+                <input type="date" id="fechaTipoCambio" name="fechaTipoCambio" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="valorDolar" class="block text-sm font-medium text-gray-700">Valor del Dólar</label>
+                <input type="number" step="0.01" id="valorDolar" name="valorDolar" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-200 ease-in-out">Guardar Tipo de Cambio</button>
+        </form>
+    </div>
+
+    <!-- Formulario de Transacción -->
+    <div class="mb-8">
+        <h2 id="registrar-vehiculo" class="text-xl font-semibold mb-4">Registrar Transacción</h2>
+        <form action="/transaccion" method="POST" class="space-y-4">
+            <div>
+                <label for="idCliente" class="block text-sm font-medium text-gray-700">ID del Cliente</label>
+                <input type="number" id="idCliente" name="idCliente" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="tipoTransaccion" class="block text-sm font-medium text-gray-700">Tipo de Transacción</label>
+                <input type="text" id="tipoTransaccion" name="tipoTransaccion" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="fechaTransaccion" class="block text-sm font-medium text-gray-700">Fecha de Transacción</label>
+                <input type="date" id="fechaTransaccion" name="fechaTransaccion" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="costo" class="block text-sm font-medium text-gray-700">Costo</label>
+                <input type="number" step="0.01" id="costo" name="costo" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="idTipoCambio" class="block text-sm font-medium text-gray-700">ID de Tipo de Cambio</label>
+                <input type="number" id="idTipoCambio" name="idTipoCambio" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+            </div>
+            <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 transition duration-200 ease-in-out">Guardar Transacción</button>
+        </form>
+    </div>
+
+    <!-- Tabla de Transacciones -->
+    <div class="overflow-x-auto">
+        <h2 id="historial-transacciones" class="text-xl font-semibold mb-4">Historial de Transacciones</h2>
+        <table class="min-w-full divide-y divide-gray-200 bg-white">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Transacción</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Cliente</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo de Transacción</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Costo</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Tipo Cambio</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Ejemplo de filas, estas deben ser llenadas dinámicamente desde el backend -->
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">101</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Compra</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-11-03</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$500.00</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1</td>
+                </tr>
+                <!-- Agregar más filas aquí -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}

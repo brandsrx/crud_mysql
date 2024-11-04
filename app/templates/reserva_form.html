@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Encabezado del formulario -->
+            <h1 class="text-3xl font-bold text-gray-800">Registro de Reserva de Vehículo</h1>
+
+        <!-- Formulario -->
+        <form action="{{url_for('reserva.create')}}" method="POST" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto space-y-4">
+            <div>
+                <label for="idReserva" class="block text-sm font-medium text-gray-700">idReserva</label>
+                <input type="number" id="idReserva" name="idReserva" placeholder="Ej. Contrato 001"
+                class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500" maxlength="50">
+        
+            </div>
+            <!-- Campo de ID Cliente -->
+            <div>
+                <label for="idCliente" class="block text-sm font-medium text-gray-700">idCliente</label>
+                <input type="number" id="idCliente" name="idCliente" placeholder="Ej. Contrato 001"
+                class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500" maxlength="50">
+        
+            </div>
+
+            <!-- Campo de ID Empleado -->
+            <div>
+                <label for="idEmpleado" class="block text-sm font-medium text-gray-700">idEmpleado</label>
+                <input type="number" id="idEmpleado" name="idEmpleado" placeholder="Ej. Contrato 001"
+                class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500" maxlength="50">
+        
+            </div>
+
+            <!-- Campo de Fecha de Inicio -->
+            <div>
+                <label for="fechaInicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
+                <input type="date" id="fechaInicio" name="fechaInicio" required class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+
+            <!-- Campo de Fecha de Fin -->
+            <div>
+                <label for="fechaFin" class="block text-sm font-medium text-gray-700">Fecha de Fin</label>
+                <input type="date" id="fechaFin" name="fechaFin" required
+                       class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+            </div>
+
+            <!-- Campo de Contrato -->
+            <div>
+                <label for="contrato" class="block text-sm font-medium text-gray-700">Contrato</label>
+                <input type="text" id="contrato" name="contrato" placeholder="Ej. Contrato 001"
+                       class="mt-1 block w-full px-4 py-2 border rounded-lg bg-gray-50 text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500" maxlength="50">
+            </div>
+
+            <!-- Botón de Envío -->
+            <div class="flex justify-end">
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

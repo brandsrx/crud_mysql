@@ -77,6 +77,30 @@ class Vehiculo():
             cursor.close()
             return [vehiculo,estado_vehiculo,marca]
 
+      @staticmethod
+      def vehiculo_disponible():
+            connectiond = db()
+            cursor = connectiond.cursor()
+            cursor.execute("""
+                              SELECT 
+                                    VH.*,
+                                    ev.nombre_estado as estado,
+                                    ev.descripcion
+                              FROM VEHICULO VH
+                              INNER JOIN ESTADO_VEHICULO EV ON 
+                              VH.IDESTADOVEHICULO = EV.IDESTADOVEHICULO and
+                              lower(ev.nombre_estado) like 'disponible'
+                              """)
+            vehiculo_ones = cursor.fetchall()
+            list_vh = []
+            for vehiculo_one in vehiculo_ones:
+                  vehiculo = Vehiculo(vehiculo_one[0],vehiculo_one[1],vehiculo_one[2],vehiculo_one[3],vehiculo_one[4],vehiculo_one[5],vehiculo_one[6],vehiculo_one[7])
+                  estado_vehiculo = EstadoVehiculo(vehiculo.id_estado_vehiculo,vehiculo_one[8],vehiculo_one[9])
+                  list_vh.append([vehiculo,estado_vehiculo])
+            cursor.close()
+            
+            return list_vh
+            
       def update(self,anio = None,modelo = None,precio_diario=None,precio_dolar=None,caracteristicas=None):
             """Actualiza un registro en la tabla reserva."""
             connection = db()
@@ -120,7 +144,26 @@ class Vehiculo():
       def to_string(self):
             print(self.id_vehiculo,self.anio,self.modelo,self.precio_diario,self.precio_dolar,self.caracteristicas,self.id_estado_vehiculo,self.id_marca)
 
-
+      @staticmethod
+      def seguimient():
+            seguimiento = None
+            try:
+                  connection = db()
+                  cursor = connection.cursor()
+                  cursor.execute("SELECT * FROM SEGUIMIENTO_VEHICULO")
+                  lista =[]
+                  for seg in cursor.fetchall():
+                        lista.append({
+                              'id':seg[0],
+                              'id_vehiculo':seg[1],
+                              'ubicacion_actual':seg[2],
+                              'ultima_fecha':seg[3]
+                        })
+                  seguimiento = lista
+            except Exception as ex:
+                  print(ex)
+            return seguimiento
+      
       @staticmethod
       def delete(id_vehiculo):
             connection = db()

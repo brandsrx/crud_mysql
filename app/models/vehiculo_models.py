@@ -143,7 +143,16 @@ class Vehiculo():
                         connection.close()
       def to_string(self):
             print(self.id_vehiculo,self.anio,self.modelo,self.precio_diario,self.precio_dolar,self.caracteristicas,self.id_estado_vehiculo,self.id_marca)
-
+      @staticmethod
+      def find_all_ids():
+            connection = db()
+            try:
+                  with connection.cursor() as cursor:
+                        cursor.execute("SELECT idVehiculo FROM VEHICULO")
+                        vehiculo_ids = cursor.fetchall()
+                        return [row[0] for row in vehiculo_ids]
+            finally:
+                  connection.close()
       @staticmethod
       def seguimient():
             seguimiento = None

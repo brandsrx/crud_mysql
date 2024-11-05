@@ -3,7 +3,7 @@ import cx_Oracle
 def db():
       try:
             db_connection = cx_Oracle.connect(
-                  user="BD_CONSECIONARIO",
+                  user="DB_CONSECIONARIO2",
                   password="123",
                   dsn="localhost:1521/xe",
                   encoding='UTF-8'

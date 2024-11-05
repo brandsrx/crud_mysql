@@ -12,19 +12,19 @@
         <!-- Tarjetas de Métricas -->
         <div class="bg-white p-4 rounded-lg shadow-lg">
             <h2 class="text-sm font-semibold text-gray-500">Ingresos Totales</h2>
-            <p class="mt-2 text-2xl font-bold text-gray-800">$25,000</p>
+            <p class="mt-2 text-2xl font-bold text-gray-800">{{header["ingresos_total"]}}</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-lg">
             <h2 class="text-sm font-semibold text-gray-500">Total de Transacciones</h2>
-            <p class="mt-2 text-2xl font-bold text-gray-800">120</p>
+            <p class="mt-2 text-2xl font-bold text-gray-800">{{header["total_transaccionnes"]}}</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-lg">
             <h2 class="text-sm font-semibold text-gray-500">Clientes Activos</h2>
-            <p class="mt-2 text-2xl font-bold text-gray-800">58</p>
+            <p class="mt-2 text-2xl font-bold text-gray-800">{{header["cliente_activos"]}}</p>
         </div>
         <div class="bg-white p-4 rounded-lg shadow-lg">
             <h2 class="text-sm font-semibold text-gray-500">Tipo de Cambio Actual</h2>
-            <p class="mt-2 text-2xl font-bold text-gray-800">7.15</p>
+            <p class="mt-2 text-2xl font-bold text-gray-800">{{header["tipo_cambio"]}}</p>
         </div>
     </div>
 
@@ -47,31 +47,58 @@
 <!-- Script para Gráficas con Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    const dat_meses = {{ meses | tojson }};
+    const dat_tipo = {{ tipo | tojson }};
+        // Puedes usar la variable transacciones en tu código JS
     // Configuración de la gráfica de línea
     const lineChart = new Chart(document.getElementById('lineChart').getContext('2d'), {
         type: 'line',
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+            labels:dat_meses[0],
             datasets: [{
                 label: 'Ingresos',
-                data: [1200, 1900, 3000, 5000, 4000],
+                data: dat_meses[1],
                 borderColor: 'rgba(59, 130, 246, 1)',
-                backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                fill: true
+                backgroundColor: 'rgba(59, 130, 246, 0.2)'
             }]
-        }
+        },
+        fill: true
     });
 
     // Configuración de la gráfica de barra
     const barChart = new Chart(document.getElementById('barChart').getContext('2d'), {
         type: 'bar',
         data: {
-            labels: ['Compra', 'Venta', 'Transferencia'],
+            labels: dat_tipo[0],
             datasets: [{
-                label: 'Transacciones',
-                data: [50, 75, 30],
+                label: 'cantidad de transacciones',
+                data: dat_tipo[1],
                 backgroundColor: ['#3b82f6', '#34d399', '#fbbf24'],
             }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,        // Mostrar el título
+                        text: 'Numero de clientes',  // Título que deseas mostrar
+                        font: {
+                            size: 16,         // Tamaño de la fuente
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tipo de Transacción', // Título del eje X
+                        font: {
+                            size: 16,
+                        }
+                    }
+                }
+            }
         }
     });
 </script>

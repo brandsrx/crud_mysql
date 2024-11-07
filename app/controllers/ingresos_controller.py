@@ -115,3 +115,20 @@ def tranasccion_register():
     else:
         flash("NO se registro","error")
     return redirect(url_for("ingresos.index"))
+
+@ingresos_bp.route('/transacciones/update/<int:id_transaccion>', methods=['GET', 'POST'])
+def update_transaccion_view(id_transaccion):
+    if request.method == 'POST':
+        tipo_transaccion = request.form['tipo_transaccion']
+        costo = request.form['costo']
+        id_tipo_cambio = request.form['id_tipo_cambio']
+        Transaccion.update_transaccion(id_transaccion, tipo_transaccion, costo, id_tipo_cambio)
+        return redirect(url_for('ingresos.index'))
+    tr = Transaccion.query(f"SELECT * FROM TRANSACCION WHERE IDTRANSACCION = {id_transaccion} ")[0]
+    transaccion = Transaccion(tr[0],tr[1],tr[2],tr[3],tr[4],tr[5])
+    return render_template('ingresos/transaccion_update.html', transaccion=transaccion)
+
+@ingresos_bp.route('/transacciones/delete/<int:id_transaccion>', methods=['GET'])
+def delete_transaccion_view(id_transaccion):
+    Transaccion.delete_transaccion(id_transaccion)
+    return redirect(url_for('ingresos.index'))

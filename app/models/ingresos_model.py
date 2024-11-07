@@ -145,6 +145,15 @@ class Transaccion:
             finally:
                   connection.close()
       @staticmethod
+      def delete_transaccion(id_transaccion):
+            connection = db()
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM TRANSACCION WHERE idTransaccion = :1", (id_transaccion,))
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+      @staticmethod
       def find_all():
             cursor = db_conecction.cursor()
             cursor.execute("SELECT * FROM transaccion")  # Ejemplo de consulta
@@ -154,6 +163,19 @@ class Transaccion:
                   lista.append(transaccion_x)
             cursor.close()
             return lista
+            
+      @staticmethod
+      def update_transaccion(id_transaccion, tipo_transaccion, costo, id_tipo_cambio):
+            connection = db()
+            cursor = connection.cursor()
+            cursor.execute("""
+                  UPDATE TRANSACCION
+                  SET tipoTransaccion = :1, costo = :2, idTipoCambio = :3
+                  WHERE idTransaccion = :4
+            """, (tipo_transaccion, costo, id_tipo_cambio, id_transaccion))
+            connection.commit()
+            cursor.close() 
+            connection.close()
       @staticmethod
       def query(query):
             connection = db()

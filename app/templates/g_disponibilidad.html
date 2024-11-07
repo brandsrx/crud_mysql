@@ -4,6 +4,7 @@
 
 <div class="container mx-auto my-10 p-8 bg-white rounded-lg shadow-md">
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Gestionar disponibilidad</h2>
+    <a href="{{url_for('est_vehiculo.create_estado_vehiculo')}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">Crear estado</a>
     <table class="min-w-full bg-white border border-gray-300">
         <thead>
             <tr>
@@ -27,7 +28,6 @@
                     <!-- Botón Editar -->
                     <a href="{{url_for('est_vehiculo.edit',id=vehiculo[1].id_estado_vehiculo)}}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">Editar estado</a>
                     <!-- Botón Eliminar -->
-                    <a href="{{url_for('reserva.create')}}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">reservar</a>
                 </td>
             </tr>
             {% endfor %}

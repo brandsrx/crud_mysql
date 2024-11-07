@@ -6,6 +6,22 @@ class EstadoVehiculo:
             self.nombre_estado = nombre_estado
             self.descripcion = descripcion
 
+      def create(self):
+            try:
+                  connection = db()
+                  cursor = connection.cursor()
+                  cursor.execute("""INSERT INTO ESTADO_VEHICULO (IDESTADOVEHICULO,NOMBRE_ESTADO,DESCRIPCION)
+                                    VALUES (:IDESTADOVEHICULO,:NOMBRE_ESTADO,:DESCRIPCION)""",
+                                    {
+                                          "IDESTADOVEHICULO":self.id_estado_vehiculo,
+                                          "NOMBRE_ESTADO":self.nombre_estado,
+                                          "DESCRIPCION":self.descripcion
+                                    })
+                  return True
+            except Exception as ex:
+                  print(f"error:{ex}")
+                  return False
+
       @staticmethod
       def find_by(id):
             connection = db()

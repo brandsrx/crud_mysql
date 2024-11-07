@@ -6,6 +6,7 @@ from controllers import seguro_controller,aseguradora_controller
 
 from controllers import routes
 
+from controllers import empleado_controller
 
 app = Flask(__name__)
 
@@ -21,6 +22,7 @@ app.register_blueprint(seguro_controller.seguro_bp)
 
 app.register_blueprint(routes.main)
 
+app.register_blueprint(empleado_controller.empleado_persona_bp)
 
 if __name__ == "__main__":
       app.run(debug=True)

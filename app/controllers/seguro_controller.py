@@ -53,7 +53,7 @@ def update(id):
     fecha_fin_str = datetime.strptime(fecha_fin, '%Y-%m-%d').date()
     # Update the seguro
     seguro_model.update_seguro(id, id_vehiculo, id_aseguradora, fecha_inicio_str, fecha_fin_str, tipo_seguro, costo)
-    #flash('Seguro actualizado exitosamente!', 'success')
+    flash('Seguro actualizado exitosamente!', 'success')
 
     return redirect(url_for('seguro.seguros'))
 
@@ -61,7 +61,7 @@ def update(id):
 def delete_seguro(id):
     seguro = seguro_model.find_by(id)
     if seguro is None:
-        print('No existe un seguro con ese id', 'error')
+        flash('No existe un seguro con ese id', 'error')
     else:
         seguro_model.delete_seguro(id)
 

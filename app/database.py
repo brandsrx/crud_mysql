@@ -1,14 +1,16 @@
-import cx_Oracle
+import pymysql
 
+# Configuración de la conexión
 def db():
       try:
-            db_connection = cx_Oracle.connect(
-                  user="DB_CONSECIONARIO2",
-                  password="123",
-                  dsn="localhost:1521/xe",
-                  encoding='UTF-8'
-            )     
-            print('Coneccion exitosa a la base de datos')
-            return db_connection
+            conexion = pymysql.connect(
+                        host="localhost",          # Dirección del servidor de MySQL
+                        user="root",               # Usuario de la base de datos
+                        password="123456",  # Contraseña del usuario
+                        database="consecionario" # Nombre de la base de datos
+            )
+            print("Conexion exitosa")
       except Exception as ex:
-            print(ex)
+            print(f"Error no se pudo conectar : {ex}")
+            return None
+      return conexion

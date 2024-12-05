@@ -11,12 +11,12 @@ class EstadoVehiculo:
                   connection = db()
                   cursor = connection.cursor()
                   cursor.execute("""INSERT INTO ESTADO_VEHICULO (IDESTADOVEHICULO,NOMBRE_ESTADO,DESCRIPCION)
-                                    VALUES (:IDESTADOVEHICULO,:NOMBRE_ESTADO,:DESCRIPCION)""",
-                                    {
-                                          "IDESTADOVEHICULO":self.id_estado_vehiculo,
-                                          "NOMBRE_ESTADO":self.nombre_estado,
-                                          "DESCRIPCION":self.descripcion
-                                    })
+                                    VALUES (%s,%s,%s)""",
+                                    (
+                                          self.id_estado_vehiculo,
+                                          self.nombre_estado,
+                                          self.descripcion
+                                    ))
                   return True
             except Exception as ex:
                   print(f"error:{ex}")
@@ -28,10 +28,8 @@ class EstadoVehiculo:
             cursor = connection.cursor()
             cursor.execute("""
                               SELECT * FROM ESTADO_VEHICULO
-                              WHERE IDESTADOVEHICULO = :id_estado_vehiculo
-                              """,{
-                                    'id_estado_vehiculo':id
-                              })
+                              WHERE IDESTADOVEHICULO = %s
+                              """,(id,))
             x1 = cursor.fetchone()
             print(x1)                 
             estado = EstadoVehiculo(x1[0],x1[1],x1[2])
@@ -50,15 +48,15 @@ class EstadoVehiculo:
                   cursor.execute("""
                               UPDATE  ESTADO_VEHICULO 
                               SET 
-                              NOMBRE_ESTADO = :NOMBRE_ESTADO,
-                              DESCRIPCION = :DESCRIPCION
-                              WHERE IDESTADOVEHICULO = :ID
+                              NOMBRE_ESTADO = %s,
+                              DESCRIPCION = %s
+                              WHERE IDESTADOVEHICULO = %s
                               """,
-                              {
-                                    "NOMBRE_ESTADO":self.nombre_estado,
-                                    "DESCRIPCION":self.descripcion,
-                                    "ID":self.id_estado_vehiculo
-                              })
+                              (
+                                    self.nombre_estado,
+                                    self.descripcion,
+                                    self.id_estado_vehiculo
+                              ))
                   connection.commit()
                   return True
             except Exception as ex:

@@ -13,7 +13,6 @@ class Vehiculo():
             self.caracteristicas = caracteristicas
             self.id_estado_vehiculo = id_estado_vehiculo
             self.id_marca = id_marca
-
       def create(self):
             connection = db()
             try:
@@ -21,36 +20,49 @@ class Vehiculo():
                         cursor.execute(
                         """
                         INSERT INTO VEHICULO (idVehiculo, anio, modelo, precioDiario, precioDolar, caracteristicas, idEstadoVehiculo, idMarca) 
-                        VALUES (:id_vehiculo, :anio, :modelo, :precio_diario, :precio_dolar, :caracteristicas, :id_estado_vehiculo, :id_marca)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                         """,
-                        (self.id_vehiculo,self.anio,self.modelo,self.precio_diario,self.precio_dolar,self.caracteristicas,self.id_estado_vehiculo,self.id_marca)
+                        (
+                              self.id_vehiculo,
+                              self.anio,
+                              self.modelo,
+                              self.precio_diario,
+                              self.precio_dolar,
+                              self.caracteristicas,
+                              self.id_estado_vehiculo,
+                              self.id_marca
+                        )
                         )
                         connection.commit()
-                  return not None
+                  return True  # Retorna True si todo se ejecutó correctamente
             except Exception as ex:
-                  print("Error al crear la reserva:", ex)
-                  return None
+                  print("Error al crear el vehículo:", ex)
+                  return False  # Retorna False en caso de error
             finally:
-                  connection.close()
-
+                  cursor.close()
       @staticmethod
       def find_all():
-            cursor = db_conecction.cursor()
-            cursor.execute("SELECT * FROM VEHICULO")  # Ejemplo de consulta
-            vehiculos = cursor.fetchall()
-            list_vehiculo = []
-            for vh in vehiculos:
-                  vehiculo = Vehiculo(vh[0],vh[1],vh[2],vh[3],vh[4],vh[5],vh[6],vh[7])
-                  list_vehiculo.append(vehiculo)
-            cursor.close()
-            return list_vehiculo
+            try:
+                  connection = db()  # Obtener la conexión
+                  with connection.cursor() as cursor:
+                        cursor.execute("SELECT * FROM VEHICULO")
+                        vehiculos = cursor.fetchall()
+                        list_vehiculo = []
+                        for vh in vehiculos:
+                              vehiculo = Vehiculo(vh[0], vh[1], vh[2], vh[3], vh[4], vh[5], vh[6], vh[7])
+                              list_vehiculo.append(vehiculo)
+                  return list_vehiculo
+            except Exception as ex:
+                  print("Error al obtener los vehículos:", ex)
+            finally:
+                  connection.close()
 
       @staticmethod
       def find_by(id):
             cursor = db_conecction.cursor()
             cursor.execute(
-                  "SELECT * FROM VEHICULO where idVehiculo = :id_vehiculo",
-                  {':id_vehiculo':id})  # Ejemplo de consulta
+                  "SELECT * FROM VEHICULO where idVehiculo = %s",
+                  (id,))  # Ejemplo de consulta
             reservas = cursor.fetchone()
             vehiculo = Vehiculo(reservas[0],reservas[1],reservas[2],reservas[3],reservas[4],reservas[5],reservas[6],reservas[7])
             cursor.close()
@@ -64,9 +76,9 @@ class Vehiculo():
                         select vh.*,ev.nombre_estado as estado,ev.descripcion,m.nombremarca,m.descripcion,m.paismarca from vehiculo vh
                         inner join estado_vehiculo ev on vh.idestadovehiculo = ev.idestadovehiculo
                         inner join marca m on vh.idmarca = m.idmarca 
-                        where idvehiculo = :id_vehiculo
+                        where idvehiculo = %s
                   """,
-                  {':id_vehiculo':id}
+                  (id,)
             )
             vehiculo_one = cursor.fetchone()
             
@@ -121,20 +133,20 @@ class Vehiculo():
                         with connection.cursor() as cursor:
                               cursor.execute(
                                     """UPDATE vehiculo 
-                                    SET anio = :anio, 
-                                          modelo = :modelo, 
-                                          precioDiario = :precio_diario,
-                                          precioDolar = :precio_dolar,
-                                          caracteristicas = :caracteristicas
-                                    WHERE IDVEHICULO = :id_vehiculo""",
-                                    {
-                                          'anio': self.anio,
-                                          'modelo': self.modelo,
-                                          'precio_diario': self.precio_diario,
-                                          'precio_dolar': self.precio_dolar,
-                                          'caracteristicas':self.caracteristicas,
-                                          'id_vehiculo':self.id_vehiculo
-                                    }
+                                    SET anio = %s, 
+                                          modelo = %s, 
+                                          precioDiario = %s,
+                                          precioDolar = %s,
+                                          caracteristicas = %s
+                                    WHERE IDVEHICULO = %s""",
+                                    (
+                                          self.anio,
+                                          self.modelo,
+                                          self.precio_diario,
+                                          self.precio_dolar,
+                                          self.caracteristicas,
+                                          self.id_vehiculo
+                                    )
                               )
                               connection.commit()
                   except Exception as ex:
@@ -179,7 +191,7 @@ class Vehiculo():
             try:
                   with connection.cursor() as cursor:
                         cursor.execute(
-                        "DELETE FROM VEHICULO WHERE IDVEHICULO = :1",
+                        "DELETE FROM VEHICULO WHERE IDVEHICULO = %s",
                         (id_vehiculo,)
                         )
                         connection.commit()

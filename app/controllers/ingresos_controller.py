@@ -18,12 +18,12 @@ def ingresos_men():
     meses = []
     costo = []
     datas = Transaccion.query("""
-                                        SELECT TO_CHAR(FECHATRANSACCION, 'YYYY-MM') AS mes, 
-                                            SUM(COSTO) AS ingresos_mensuales
-                                        FROM TRANSACCION
-                                        GROUP BY TO_CHAR(FECHATRANSACCION, 'YYYY-MM')
-                                        ORDER BY mes
-                                        """)
+                                    SELECT DATE_FORMAT(FECHATRANSACCION, '%Y-%m') AS mes, 
+                                        SUM(COSTO) AS ingresos_mensuales
+                                    FROM TRANSACCION
+                                    GROUP BY DATE_FORMAT(FECHATRANSACCION, '%Y-%m')
+                                    ORDER BY mes;
+                            """)
     for data in datas:
         
         mes = int(data[0][-2:])
@@ -50,20 +50,18 @@ def ingresos_tipo():
 @ingresos_bp.route("/ingresos/dashboard")
 def dashboard():
     tipo_cambio_actual  = TipoCambio.query("""
-                                            SELECT * 
-                                            FROM (
-                                                SELECT valordolar 
-                                                FROM tipo_cambio 
-                                                ORDER BY fechatipocambio DESC
-                                            ) 
-                                            WHERE ROWNUM <= 1                       
+                                            SELECT valordolar
+                                            FROM tipo_cambio
+                                            ORDER BY fechatipocambio DESC
+                                            LIMIT 1;
                                             """)
     cliente_activos = TipoCambio.query("SELECT COUNT(idcliente) FROM transaccion")
     total_transacciones = Transaccion.query("SELECT COUNT(*) FROM TRANSACCION")
     ingresos = Transaccion.query("""
-                SELECT SUM(COSTO) AS total_ingresos
-                    FROM TRANSACCION
-                    WHERE FECHATRANSACCION BETWEEN ADD_MONTHS(SYSDATE, -5) AND SYSDATE
+                            SELECT SUM(COSTO) AS total_ingresos
+                            FROM TRANSACCION
+                            WHERE FECHATRANSACCION BETWEEN CURDATE() - INTERVAL 10 MONTH AND CURDATE();
+
                 """)
     dash_header = {
         "tipo_cambio":tipo_cambio_actual[0][0],
@@ -115,7 +113,7 @@ def tranasccion_register():
     else:
         flash("NO se registro","error")
     return redirect(url_for("ingresos.index"))
-
+ 
 @ingresos_bp.route('/transacciones/update/<int:id_transaccion>', methods=['GET', 'POST'])
 def update_transaccion_view(id_transaccion):
     if request.method == 'POST':

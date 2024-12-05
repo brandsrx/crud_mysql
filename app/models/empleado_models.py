@@ -30,13 +30,10 @@ class EmpleadoPersona:
         connection = db()
         try:
             with connection.cursor() as cursor:
-
-                print("Datos recibidos para crear persona:", nombre, paterno, materno, direccion, telefono, email, fecha_nac)
-                
                 cursor.execute(
                     """
                     INSERT INTO PERSONA (idPersona, nombre, paterno, materno, direccion, telefono, email, fecha_nacimiento)
-                    VALUES (persona_seq.nextval, :1, :2, :3, :4, :5, :6, :7)
+                    VALUES (persona_seq.nextval, %s,%s,%s,%s,%s,%s,%s)
                     """,(nombre, paterno, materno, direccion, telefono, email, fecha_nac),
                 )
                  # Recupera el último ID generado
@@ -61,7 +58,7 @@ class EmpleadoPersona:
                 cursor.execute(
                     """
                     INSERT INTO EMPLEADO (idEmpleado, idPersona, email, ci, comisionES)
-                    VALUES (empleado_seq.nextval, :1, :2, :3, :4)
+                    VALUES (empleado_seq.nextval, %s,%s,%s,%s)
                     """,(id_persona, email, ci, comisionES)
                 )
                 # Recupera el último ID generado
@@ -86,7 +83,7 @@ class EmpleadoPersona:
                 cursor.execute(
                     """
                     INSERT INTO USUARIO (idUsuario, idEmpleado, nombreUsuario, contrasena, rolUsuario)
-                    VALUES (usuario_seq.nextval, :1, :2, :3, :4)
+                    VALUES (usuario_seq.nextval, %s,%s,%s,%s)
                     """,
                     (id_empleado, nombreUsuario, contrasena, rolUsuario)
                 )
@@ -123,8 +120,8 @@ class EmpleadoPersona:
                     FROM EMPLEADO e
                     JOIN PERSONA p ON e.idPersona = p.idPersona
                     JOIN usuario u ON e.idEmpleado = u.idEmpleado
-                    WHERE e.idEmpleado = :id
-                    """, {"id": id}
+                    WHERE e.idEmpleado = %s
+                    """, (id,)
                 )
                 empleado = cursor.fetchone()
             return empleado
@@ -141,8 +138,8 @@ class EmpleadoPersona:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT * FROM EMPLEADO WHERE idEmpleado = :id
-                    """, {":id": id_empleado}
+                    SELECT * FROM EMPLEADO WHERE idEmpleado = %s
+                    """, (id_empleado,)
                 )
                 empleado = cursor.fetchone()
             connection.commit()
@@ -161,8 +158,8 @@ class EmpleadoPersona:
                 cursor.execute(
                     """
                     UPDATE EMPLEADO
-                    SET email = :1, ci = :2, comisionES = :3
-                    where idEmpleado = :4
+                    SET email = %s, ci = %s, comisionES = %s
+                    where idEmpleado = %s
                     """, (email, ci, comisionES, id_empleado)
                 )
             connection.commit()
@@ -175,7 +172,7 @@ class EmpleadoPersona:
         connection = db()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM EMPLEADO WHERE idEmpleado = :1", (id_empleado,))
+                cursor.execute("DELETE FROM EMPLEADO WHERE idEmpleado = %s", (id_empleado,))
                 connection.commit()
         except Exception as ex:
             print("Error al eliminar el empleado:", ex)

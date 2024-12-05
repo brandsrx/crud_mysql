@@ -8,13 +8,13 @@ class Aseguradora:
                 cursor.execute(
                     """
                     INSERT INTO ASEGURADORA (idAseguradora, nombreAseguradora, contactoAseguradora) 
-                    VALUES (:id_aseguradora, :nombre_aseguradora, :contacto_aseguradora)
+                    VALUES (%s,%s,%s)
                     """,
-                    {
-                        'id_aseguradora': id_aseguradora,
-                        'nombre_aseguradora': nombre_aseguradora,
-                        'contacto_aseguradora': contacto_aseguradora
-                    }
+                    (
+                        id_aseguradora,
+                        nombre_aseguradora,
+                        contacto_aseguradora
+                    )
                 )
                 connection.commit()
         except Exception as ex:
@@ -37,8 +37,8 @@ class Aseguradora:
         try:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "SELECT * FROM ASEGURADORA WHERE idAseguradora = :id_aseguradora",
-                    {'id_aseguradora': id}  # <-- Nota: No uses ':' en el nombre de la clave
+                    "SELECT * FROM ASEGURADORA WHERE idAseguradora = %s",
+                    (id,)  # <-- Nota: No uses ':' en el nombre de la clave
                 )
                 aseguradoras = cursor.fetchone()
                 return aseguradoras
@@ -51,14 +51,14 @@ class Aseguradora:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """UPDATE ASEGURADORA 
-                    SET nombreAseguradora = :nuevo_nombre_aseguradora, 
-                        contactoAseguradora = :nuevo_contacto_aseguradora
-                    WHERE idAseguradora = :id_aseguradora""",
-                    {
-                        'nuevo_nombre_aseguradora': nuevo_nombre_aseguradora,
-                        'nuevo_contacto_aseguradora': nuevo_contacto_aseguradora,
-                        'id_aseguradora': id_aseguradora  # <-- Nota: No uses ':' en el nombre de la clave
-                    }
+                    SET nombreAseguradora = %s, 
+                        contactoAseguradora = %s
+                    WHERE idAseguradora = %s""",
+                    (
+                        nuevo_nombre_aseguradora,
+                        nuevo_contacto_aseguradora,
+                        id_aseguradora  # <-- Nota: No uses ':' en el nombre de la clave
+                    )
                 )
                 connection.commit()
                 print("Aseguradora actualizada exitosamente")
@@ -72,8 +72,8 @@ class Aseguradora:
         try:
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "DELETE FROM ASEGURADORA WHERE idAseguradora = :id_aseguradora",
-                    {'id_aseguradora': id_aseguradora}  # <-- Nota: No uses ':' en el nombre de la clave
+                    "DELETE FROM ASEGURADORA WHERE idAseguradora = %s",
+                    (id_aseguradora,)  # <-- Nota: No uses ':' en el nombre de la clave
                 )
                 connection.commit()
         except Exception as ex:

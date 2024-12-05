@@ -25,13 +25,13 @@ class TipoCambio():
                         cursor.execute(
                         """
                         INSERT INTO TIPO_CAMBIO (IDTIPOCAMBIO,FECHATIPOCAMBIO,VALORDOLAR) 
-                        VALUES (:id,:fecha,:valor)
+                        VALUES (%s,%s,%s)
                         """,
-                        {
-                              "id":self.id+1,
-                              "fecha":self.fecha,
-                              "valor":self.valor_dolar
-                        }
+                        (
+                              self.id+1,
+                              self.fecha,
+                              self.valor_dolar
+                        )
                         )
                         connection.commit()
                   return True
@@ -55,8 +55,8 @@ class TipoCambio():
       def find_by(id):
             cursor = db_conecction.cursor()
             cursor.execute(
-                  "SELECT * FROM TIPO_CAMBIO where IDTIPOCAMBIO = :1",
-                  id)  # Ejemplo de consulta
+                  "SELECT * FROM TIPO_CAMBIO where IDTIPOCAMBIO = %s",
+                  (id,))  # Ejemplo de consulta
             tipo = cursor.fetchone()
             tipo_cambio = TipoCambio(tipo[0],tipo[1],tipo[2])
             cursor.close()
@@ -79,10 +79,10 @@ class TipoCambio():
                   with connection.cursor() as cursor:
                         cursor.execute(
                               """UPDATE vehiculo 
-                              SET FECHATIPOCAMBIO = :1,
-                                    VALORDOLAR = :2
+                              SET FECHATIPOCAMBIO = %s,
+                                    VALORDOLAR = %s
 
-                              WHERE IDTIPOCAMBIO = :3""",
+                              WHERE IDTIPOCAMBIO = %s""",
                               (self.fecha,self.valor_dolar,self.id)
                         )
                         connection.commit()
@@ -91,7 +91,7 @@ class TipoCambio():
                   print("Error al actualizar la reserva:", ex)
                   return False
             finally:
-                  connection.close()
+                  cursor.close()
       
       @staticmethod
       def delete(id_vehiculo):
@@ -99,8 +99,8 @@ class TipoCambio():
             try:
                   with connection.cursor() as cursor:
                         cursor.execute(
-                        "DELETE FROM tipo_cambio WHERE IDTIPOCAMBIO = :1",
-                        (id_vehiculo)
+                        "DELETE FROM tipo_cambio WHERE IDTIPOCAMBIO = %s",
+                        (id_vehiculo,)
                         )
                         connection.commit()
                   return True
@@ -126,16 +126,16 @@ class Transaccion:
                         cursor.execute(
                         """
                         INSERT INTO transaccion (idtransaccion,idcliente,tipotransaccion,fechatransaccion,costo,idtipocambio) 
-                        VALUES (:id,:id_cliente,:tipo,:fecha,:costo,:id_tipo)
+                        VALUES (%s,%s,%s,%s,%s,%s)
                         """,
-                        ({
-                              "id":self.id+1,
-                              "id_cliente":self.id_cliente,
-                              "tipo":self.transaccion,
-                              "fecha":self.fecha,
-                              "costo":self.costo,
-                              "id_tipo":self.id_tipo_cambio
-                        })
+                        (
+                              self.id+1,
+                              self.id_cliente,
+                              self.transaccion,
+                              self.fecha,
+                              self.costo,
+                              self.id_tipo_cambio
+                        )
                         )
                         connection.commit()
                   return True
@@ -148,7 +148,7 @@ class Transaccion:
       def delete_transaccion(id_transaccion):
             connection = db()
             cursor = connection.cursor()
-            cursor.execute("DELETE FROM TRANSACCION WHERE idTransaccion = :1", (id_transaccion,))
+            cursor.execute("DELETE FROM TRANSACCION WHERE idTransaccion = %s", (id_transaccion,))
             connection.commit()
             cursor.close()
             connection.close()
@@ -170,8 +170,8 @@ class Transaccion:
             cursor = connection.cursor()
             cursor.execute("""
                   UPDATE TRANSACCION
-                  SET tipoTransaccion = :1, costo = :2, idTipoCambio = :3
-                  WHERE idTransaccion = :4
+                  SET tipoTransaccion = %s, costo = %s, idTipoCambio = %s
+                  WHERE idTransaccion = %s
             """, (tipo_transaccion, costo, id_tipo_cambio, id_transaccion))
             connection.commit()
             cursor.close() 

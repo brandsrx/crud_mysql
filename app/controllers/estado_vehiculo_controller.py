@@ -9,7 +9,6 @@ est_vehiculo_bp = Blueprint('est_vehiculo',__name__)
 @est_vehiculo_bp.route("/vehiculo/disponible")
 def vehiculo_disponible():
     results = Vehiculo.vehiculo_disponible()
-    print(results[0][0].id_vehiculo)
     return estado_vehiculo_views.gestionar_disponibilidad(results)
 
 @est_vehiculo_bp.route("/vehiculo/estado/register",methods=["POST","GET"])

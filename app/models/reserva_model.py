@@ -1,4 +1,3 @@
-import cx_Oracle
 from datetime import datetime
 from database import db as db_connection
 class Reserva:
@@ -16,15 +15,15 @@ class Reserva:
             cursor = connection.cursor()
             cursor.execute("""
                 INSERT INTO RESERVA (idReserva, idCliente, idEmpleado, fechaInicio, fechaFin, contrato)
-                VALUES (:idReserva, :idCliente, :idEmpleado, :fechaInicio, :fechaFin, :contrato)
-            """, {
-                'idReserva': self.id_reserva,
-                'idCliente': self.id_cliente,
-                'idEmpleado': self.id_empleado,
-                'fechaInicio': self.fecha_inicio,
-                'fechaFin': self.fecha_fin,
-                'contrato': self.contrato
-            })
+                VALUES (%s, %s,%s,%s, %s,%s)
+            """, (
+                self.id_reserva,
+                self.id_cliente,
+                self.id_empleado,
+                self.fecha_inicio,
+                self.fecha_fin,
+                self.contrato
+            ))
             connection.commit()
         except Exception as e:
             print("Error al crear reserva:", e)
@@ -43,8 +42,8 @@ class Reserva:
             cursor.execute("""
                 SELECT idReserva, idCliente, idEmpleado, fechaInicio, fechaFin, contrato
                 FROM RESERVA
-                WHERE idReserva = :idReserva
-            """, {'idReserva': id_reserva})
+                WHERE idReserva = %s
+            """, (id_reserva,))
 
             row = cursor.fetchone()
             reserva = row
@@ -62,20 +61,20 @@ class Reserva:
             cursor = connection.cursor()
             cursor.execute("""
                 UPDATE RESERVA
-                SET idCliente = :idCliente,
-                    idEmpleado = :idEmpleado,
-                    fechaInicio = :fechaInicio,
-                    fechaFin = :fechaFin,
-                    contrato = :contrato
-                WHERE idReserva = :idReserva
-            """, {
-                'idCliente': reserva.id_cliente,
-                'idEmpleado': reserva.id_empleado,
-                'fechaInicio': reserva.fecha_inicio,
-                'fechaFin': reserva.fecha_fin,
-                'contrato': reserva.contrato,
-                'idReserva': reserva.id_reserva
-            })
+                SET idCliente = %s,
+                    idEmpleado = %s,
+                    fechaInicio = %s,
+                    fechaFin = %s,
+                    contrato = %s
+                WHERE idReserva = %s
+            """, (
+                reserva.id_cliente,
+                reserva.id_empleado,
+                reserva.fecha_inicio,
+                reserva.fecha_fin,
+                reserva.contrato,
+                reserva.id_reserva
+            ))
             connection.commit()
         except Exception as e:
             print("Error al actualizar reserva:", e)
@@ -90,8 +89,8 @@ class Reserva:
             cursor = connection.cursor()
             cursor.execute("""
                 DELETE FROM RESERVA
-                WHERE idReserva = :idReserva
-            """, {'idReserva': id_reserva})
+                WHERE idReserva = %s
+            """, (id_reserva,))
             connection.commit()
         except Exception as e:
             print("Error al eliminar reserva:", e)
